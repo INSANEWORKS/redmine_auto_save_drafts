@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const storageKeyPrefix = 'redmine-auto-save-drafts';
+    const pageKey = location.pathname; // 現在のURLパスをキーに追加
     let lastSavedTime = null; // 最後に保存した時間を記録
 
     function initialize() {
@@ -19,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (document.querySelector('#issue_notes')) {
             // コメント編集ページ
             textareas.push(document.querySelector('#issue_notes'));
-            storageKey = `${storageKeyPrefix}-notes`;
+            storageKey = `${storageKeyPrefix}-notes-${pageKey}`;
             messageTarget = document.querySelector('#add_notes > legend'); // コメント用メッセージ表示位置
         } else if (document.querySelector('.box.tabular.filedroplistner')) {
             // 新規チケット作成ページ
@@ -27,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const subject = document.querySelector('#issue_subject');
             if (description) textareas.push(description);
             if (subject) textareas.push(subject);
-            storageKey = `${storageKeyPrefix}-description-and-subject`;
+            storageKey = `${storageKeyPrefix}-description-and-subject-${pageKey}`;
 
             // "連続作成"ボタンの直後にメッセージを挿入
             const continueButton = document.querySelector(
