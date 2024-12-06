@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function initialize() {
         const context = detectContext();
         if (context && !context.textareas.some((textarea) => textarea.dataset.autoDraftHandled)) {
-            setupLocalDraft(context.textareas, context.storageKey, context.messageTarget);
+            setupAutoSaveDrafts (context.textareas, context.storageKey, context.messageTarget);
             context.textareas.forEach((textarea) => (textarea.dataset.autoDraftHandled = true));
         }
     }
@@ -42,8 +42,8 @@ document.addEventListener('DOMContentLoaded', function () {
         return textareas.length > 0 ? { textareas, storageKey, messageTarget } : null;
     }
 
-    // LocalDraftのセットアップ
-    function setupLocalDraft(textareas, storageKey, messageTarget) {
+    // AutoSaveDrafts のセットアップ
+    function setupAutoSaveDrafts(textareas, storageKey, messageTarget) {
         const parent = textareas[0].closest('form');
 
         // 保存された内容を自動復元
