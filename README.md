@@ -21,7 +21,7 @@
 2. Clone the repository:
 
    ```bash
-   git clone https://github.com/INSANEWORKS/redmine_quickdrafts.git redmine_quickdrafts
+   git clone https://github.com/INSANEWORKS/redmine_auto_save_drafts.git redmine_auto_save_drafts
    ```
 
 3. Restart your Redmine application:
