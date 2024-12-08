@@ -3,10 +3,35 @@ document.addEventListener('DOMContentLoaded', function () {
     const pageKey = location.pathname; // 現在のURLパスをキーに追加
     let lastSavedTime = null; // 最後に保存した時間を記録
 
+    // 言語ごとのメッセージ
+    const messages = {
+        en: {
+            saved: "Saved",
+            secondsAgo: "seconds ago",
+            comment: "Comment",
+        },
+        ja: {
+            saved: "保存済み",
+            secondsAgo: "秒前",
+            comment: "コメント",
+        },
+        fr: {
+            saved: "Enregistré",
+            secondsAgo: "secondes passées",
+            comment: "Commentaire",
+        },
+        // 必要に応じて他の言語を追加
+    };
+
+    // ブラウザの言語を取得
+    const userLang = navigator.language || navigator.userLanguage; // 例: 'en-US', 'ja'
+    const lang = userLang.split('-')[0];
+    const message = messages[lang] || messages['en']; // デフォルトは英語
+
     function initialize() {
         const context = detectContext();
         if (context && !context.textareas.some((textarea) => textarea.dataset.autoDraftHandled)) {
-            setupAutoSaveDrafts (context.textareas, context.storageKey, context.messageTarget);
+            setupAutoSaveDrafts(context.textareas, context.storageKey, context.messageTarget);
             context.textareas.forEach((textarea) => (textarea.dataset.autoDraftHandled = true));
         }
     }
@@ -87,11 +112,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!messageTarget) return;
 
         const secondsAgo = Math.floor((Date.now() - lastSavedTime) / 1000);
-        const saveMessage = `保存済み (${secondsAgo}秒前)`;
+        const saveMessage = `${message.saved} (${secondsAgo} ${message.secondsAgo})`;
 
         if (messageTarget.tagName === 'LEGEND') {
             // コメント編集の場合
-            messageTarget.innerHTML = `コメント ${saveMessage}`;
+            messageTarget.innerHTML = `${message.comment} ${saveMessage}`;
         } else {
             // 新規チケットの場合
             const sibling = messageTarget.nextSibling;

@@ -33,11 +33,27 @@
 3. Your input will be automatically saved locally every time you make changes.
 4. If you navigate away from the page and return, your unsaved draft will be automatically restored.
 
-Localization
-## Localization
+### Supported Languages
+| Language       | Message Example                          |
+|----------------|------------------------------------------|
+| **English**    | Comment Saved (5 seconds ago)           |
+| **Japanese**   | コメント 保存済み (5秒前)              |
+| **French**     | Commentaire Enregistré (il y a 5 secondes) |
 
-- Supports Japanese.
-- Currently, other languages are hard-coded into Javascript, so you will need to directly edit the files.
+### Adding New Languages
+
+To add new languages:
+1. Modify the `messages` object in `redmine_auto_save_drafts.js`.
+2. Add the appropriate translations for `saved`, `secondsAgo`, and `comment`.
+
+Example:
+```javascript
+messages.de = {
+    saved: "Gespeichert",
+    secondsAgo: "vor Sekunden",
+    comment: "Kommentar",
+};
+```
 
 ## Compatibility
 
