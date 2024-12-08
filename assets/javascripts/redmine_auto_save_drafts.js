@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // "連続作成"ボタンの直後にメッセージを挿入
             const continueButton = document.querySelector(
-                '#issue-form > input[type="submit"][name="continue"][value="連続作成"]'
+                '#issue-form > input[type="submit"][name="continue"]'
             );
             if (continueButton) {
                 messageTarget = continueButton;
