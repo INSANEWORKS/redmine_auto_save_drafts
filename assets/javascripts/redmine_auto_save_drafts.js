@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     const storageKeyPrefix = 'redmine-auto-save-drafts';
-    const pageKey = location.pathname; // 現在のURLパスをキーに追加
-    let lastSavedTime = null; // 最後に保存した時間を記録
+    const pageKey = location.pathname; // Add the current URL path to the key
+    let lastSavedTime = null; // Record the last save time
 
-    // 言語ごとのメッセージ
+    // Multi-language messages
     const messages = {
         en: {
             saved: "Saved",
@@ -20,13 +20,13 @@ document.addEventListener('DOMContentLoaded', function () {
             secondsAgo: "secondes passées",
             comment: "Commentaire",
         },
-        // 必要に応じて他の言語を追加
+        // Add more languages as needed
     };
 
-    // ブラウザの言語を取得
-    const userLang = navigator.language || navigator.userLanguage; // 例: 'en-US', 'ja'
+    // Get the browser's language
+    const userLang = navigator.language || navigator.userLanguage; // e.g., 'en-US', 'ja'
     const lang = userLang.split('-')[0];
-    const message = messages[lang] || messages['en']; // デフォルトは英語
+    const message = messages[lang] || messages['en']; // Default to English if unsupported
 
     function initialize() {
         const context = detectContext();
@@ -36,26 +36,26 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // ページのコンテキストを判定
+    // Detect the context of the page
     function detectContext() {
         const textareas = [];
         let storageKey = null;
         let messageTarget = null;
 
         if (document.querySelector('#issue_notes')) {
-            // コメント編集ページ
+            // Comment edit page
             textareas.push(document.querySelector('#issue_notes'));
             storageKey = `${storageKeyPrefix}-notes-${pageKey}`;
-            messageTarget = document.querySelector('#add_notes > legend'); // コメント用メッセージ表示位置
+            messageTarget = document.querySelector('#add_notes > legend'); // Message display location for comments
         } else if (document.querySelector('.box.tabular.filedroplistner')) {
-            // 新規チケット作成ページ
+            // New ticket creation page
             const description = document.querySelector('#issue_description');
             const subject = document.querySelector('#issue_subject');
             if (description) textareas.push(description);
             if (subject) textareas.push(subject);
             storageKey = `${storageKeyPrefix}-description-and-subject-${pageKey}`;
 
-            // "連続作成"ボタンの直後にメッセージを挿入
+            // Insert the message next to the "Continue" button
             const continueButton = document.querySelector(
                 '#issue-form > input[type="submit"][name="continue"]'
             );
@@ -67,11 +67,11 @@ document.addEventListener('DOMContentLoaded', function () {
         return textareas.length > 0 ? { textareas, storageKey, messageTarget } : null;
     }
 
-    // AutoSaveDrafts のセットアップ
+    // Set up Auto Save Drafts
     function setupAutoSaveDrafts(textareas, storageKey, messageTarget) {
         const parent = textareas[0].closest('form');
 
-        // 保存された内容を自動復元
+        // Automatically restore saved content
         const savedContent = JSON.parse(localStorage.getItem(storageKey) || '{}');
         if (savedContent && Object.values(savedContent).some((content) => content.trim() !== '')) {
             textareas.forEach((textarea) => {
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // 入力内容を即時保存
+        // Save input content immediately
         textareas.forEach((textarea) => {
             textarea.addEventListener('input', () => {
                 const draft = {};
@@ -94,12 +94,12 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
 
-        // チケット作成時に保存内容を削除
+        // Remove saved content upon ticket submission
         parent.addEventListener('submit', () => {
             localStorage.removeItem(storageKey);
         });
 
-        // 保存時間のカウント更新
+        // Update the save time display
         setInterval(() => {
             if (lastSavedTime) {
                 updateSaveMessage(messageTarget);
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 1000);
     }
 
-    // 保存メッセージの更新
+    // Update the save message
     function updateSaveMessage(messageTarget) {
         if (!messageTarget) return;
 
@@ -115,10 +115,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const saveMessage = `${message.saved} (${secondsAgo} ${message.secondsAgo})`;
 
         if (messageTarget.tagName === 'LEGEND') {
-            // コメント編集の場合
+            // For comment edit pages
             messageTarget.innerHTML = `${message.comment} ${saveMessage}`;
         } else {
-            // 新規チケットの場合
+            // For new ticket creation pages
             const sibling = messageTarget.nextSibling;
             if (sibling && sibling.id === 'save-message') {
                 sibling.textContent = saveMessage;
@@ -132,10 +132,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // DOMが完全にロードされた後に確認
+    // Confirm after the DOM is fully loaded
     initialize();
 
-    // テキストエリアが動的に生成される場合に対応
+    // Handle dynamically generated textareas
     const observer = new MutationObserver(() => initialize());
     observer.observe(document.body, { childList: true, subtree: true });
 });
